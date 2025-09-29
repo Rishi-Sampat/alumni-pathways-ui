@@ -14,7 +14,675 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      alumni_phone_dataset: {
+        Row: {
+          created_at: string | null
+          department: string
+          first_name: string
+          graduation_year: number
+          id: string
+          is_used: boolean | null
+          last_name: string
+          phone: string
+        }
+        Insert: {
+          created_at?: string | null
+          department: string
+          first_name: string
+          graduation_year: number
+          id?: string
+          is_used?: boolean | null
+          last_name: string
+          phone: string
+        }
+        Update: {
+          created_at?: string | null
+          department?: string
+          first_name?: string
+          graduation_year?: number
+          id?: string
+          is_used?: boolean | null
+          last_name?: string
+          phone?: string
+        }
+        Relationships: []
+      }
+      alumni_profiles: {
+        Row: {
+          achievements: string[] | null
+          bio: string | null
+          created_at: string | null
+          current_company: string | null
+          current_position: string | null
+          department: string
+          domains: string[] | null
+          graduation_year: number
+          id: string
+          interests: string[] | null
+          linkedin_url: string | null
+          location: string | null
+          profile_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          achievements?: string[] | null
+          bio?: string | null
+          created_at?: string | null
+          current_company?: string | null
+          current_position?: string | null
+          department: string
+          domains?: string[] | null
+          graduation_year: number
+          id?: string
+          interests?: string[] | null
+          linkedin_url?: string | null
+          location?: string | null
+          profile_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          achievements?: string[] | null
+          bio?: string | null
+          created_at?: string | null
+          current_company?: string | null
+          current_position?: string | null
+          department?: string
+          domains?: string[] | null
+          graduation_year?: number
+          id?: string
+          interests?: string[] | null
+          linkedin_url?: string | null
+          location?: string | null
+          profile_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "alumni_profiles_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      chat_messages: {
+        Row: {
+          attachment_url: string | null
+          content: string
+          created_at: string | null
+          doubt_id: string | null
+          id: string
+          is_read: boolean | null
+          receiver_id: string
+          sender_id: string
+        }
+        Insert: {
+          attachment_url?: string | null
+          content: string
+          created_at?: string | null
+          doubt_id?: string | null
+          id?: string
+          is_read?: boolean | null
+          receiver_id: string
+          sender_id: string
+        }
+        Update: {
+          attachment_url?: string | null
+          content?: string
+          created_at?: string | null
+          doubt_id?: string | null
+          id?: string
+          is_read?: boolean | null
+          receiver_id?: string
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_messages_doubt_id_fkey"
+            columns: ["doubt_id"]
+            isOneToOne: false
+            referencedRelation: "doubts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chat_messages_receiver_id_fkey"
+            columns: ["receiver_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chat_messages_sender_id_fkey"
+            columns: ["sender_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      doubts: {
+        Row: {
+          assigned_alumni_id: string | null
+          created_at: string | null
+          description: string
+          domain_tags: string[]
+          feedback: string | null
+          id: string
+          rating: number | null
+          resolved_at: string | null
+          status: Database["public"]["Enums"]["doubt_status"] | null
+          student_id: string
+          title: string
+          updated_at: string | null
+          urgency: Database["public"]["Enums"]["doubt_urgency"] | null
+        }
+        Insert: {
+          assigned_alumni_id?: string | null
+          created_at?: string | null
+          description: string
+          domain_tags: string[]
+          feedback?: string | null
+          id?: string
+          rating?: number | null
+          resolved_at?: string | null
+          status?: Database["public"]["Enums"]["doubt_status"] | null
+          student_id: string
+          title: string
+          updated_at?: string | null
+          urgency?: Database["public"]["Enums"]["doubt_urgency"] | null
+        }
+        Update: {
+          assigned_alumni_id?: string | null
+          created_at?: string | null
+          description?: string
+          domain_tags?: string[]
+          feedback?: string | null
+          id?: string
+          rating?: number | null
+          resolved_at?: string | null
+          status?: Database["public"]["Enums"]["doubt_status"] | null
+          student_id?: string
+          title?: string
+          updated_at?: string | null
+          urgency?: Database["public"]["Enums"]["doubt_urgency"] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "doubts_assigned_alumni_id_fkey"
+            columns: ["assigned_alumni_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "doubts_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      event_registrations: {
+        Row: {
+          event_id: string
+          id: string
+          registered_at: string | null
+          user_id: string
+        }
+        Insert: {
+          event_id: string
+          id?: string
+          registered_at?: string | null
+          user_id: string
+        }
+        Update: {
+          event_id?: string
+          id?: string
+          registered_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_registrations_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "event_registrations_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      events: {
+        Row: {
+          created_at: string | null
+          current_attendees: number | null
+          description: string
+          event_date: string
+          event_type: Database["public"]["Enums"]["event_type"]
+          id: string
+          image_url: string | null
+          is_active: boolean | null
+          location: string
+          max_attendees: number | null
+          organizer_id: string
+          registration_deadline: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          current_attendees?: number | null
+          description: string
+          event_date: string
+          event_type: Database["public"]["Enums"]["event_type"]
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          location: string
+          max_attendees?: number | null
+          organizer_id: string
+          registration_deadline?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          current_attendees?: number | null
+          description?: string
+          event_date?: string
+          event_type?: Database["public"]["Enums"]["event_type"]
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          location?: string
+          max_attendees?: number | null
+          organizer_id?: string
+          registration_deadline?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "events_organizer_id_fkey"
+            columns: ["organizer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      file_uploads: {
+        Row: {
+          created_at: string | null
+          file_name: string
+          file_size: number | null
+          file_type: string
+          file_url: string
+          id: string
+          uploader_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          file_name: string
+          file_size?: number | null
+          file_type: string
+          file_url: string
+          id?: string
+          uploader_id: string
+        }
+        Update: {
+          created_at?: string | null
+          file_name?: string
+          file_size?: number | null
+          file_type?: string
+          file_url?: string
+          id?: string
+          uploader_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "file_uploads_uploader_id_fkey"
+            columns: ["uploader_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      leaderboard_points: {
+        Row: {
+          action: string
+          created_at: string | null
+          domain: string | null
+          doubt_id: string | null
+          event_id: string | null
+          id: string
+          opportunity_id: string | null
+          points: number
+          user_id: string
+        }
+        Insert: {
+          action: string
+          created_at?: string | null
+          domain?: string | null
+          doubt_id?: string | null
+          event_id?: string | null
+          id?: string
+          opportunity_id?: string | null
+          points: number
+          user_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string | null
+          domain?: string | null
+          doubt_id?: string | null
+          event_id?: string | null
+          id?: string
+          opportunity_id?: string | null
+          points?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "leaderboard_points_doubt_id_fkey"
+            columns: ["doubt_id"]
+            isOneToOne: false
+            referencedRelation: "doubts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "leaderboard_points_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "leaderboard_points_opportunity_id_fkey"
+            columns: ["opportunity_id"]
+            isOneToOne: false
+            referencedRelation: "opportunities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "leaderboard_points_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_read: boolean | null
+          message: string
+          related_id: string | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          message: string
+          related_id?: string | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          message?: string
+          related_id?: string | null
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      opportunities: {
+        Row: {
+          application_url: string | null
+          company_name: string
+          created_at: string | null
+          deadline: string | null
+          description: string
+          id: string
+          is_active: boolean | null
+          location: string | null
+          posted_by: string
+          requirements: string[] | null
+          skills_required: string[] | null
+          title: string
+          type: Database["public"]["Enums"]["opportunity_type"]
+          updated_at: string | null
+        }
+        Insert: {
+          application_url?: string | null
+          company_name: string
+          created_at?: string | null
+          deadline?: string | null
+          description: string
+          id?: string
+          is_active?: boolean | null
+          location?: string | null
+          posted_by: string
+          requirements?: string[] | null
+          skills_required?: string[] | null
+          title: string
+          type: Database["public"]["Enums"]["opportunity_type"]
+          updated_at?: string | null
+        }
+        Update: {
+          application_url?: string | null
+          company_name?: string
+          created_at?: string | null
+          deadline?: string | null
+          description?: string
+          id?: string
+          is_active?: boolean | null
+          location?: string | null
+          posted_by?: string
+          requirements?: string[] | null
+          skills_required?: string[] | null
+          title?: string
+          type?: Database["public"]["Enums"]["opportunity_type"]
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "opportunities_posted_by_fkey"
+            columns: ["posted_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      otp_verifications: {
+        Row: {
+          attempts: number | null
+          created_at: string | null
+          expires_at: string
+          id: string
+          is_verified: boolean | null
+          otp_code: string
+          phone: string
+        }
+        Insert: {
+          attempts?: number | null
+          created_at?: string | null
+          expires_at: string
+          id?: string
+          is_verified?: boolean | null
+          otp_code: string
+          phone: string
+        }
+        Update: {
+          attempts?: number | null
+          created_at?: string | null
+          expires_at?: string
+          id?: string
+          is_verified?: boolean | null
+          otp_code?: string
+          phone?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string | null
+          email: string
+          first_name: string
+          id: string
+          is_active: boolean | null
+          is_verified: boolean | null
+          last_name: string
+          phone: string | null
+          role: Database["public"]["Enums"]["user_role"]
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string | null
+          email: string
+          first_name: string
+          id?: string
+          is_active?: boolean | null
+          is_verified?: boolean | null
+          last_name: string
+          phone?: string | null
+          role: Database["public"]["Enums"]["user_role"]
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string | null
+          email?: string
+          first_name?: string
+          id?: string
+          is_active?: boolean | null
+          is_verified?: boolean | null
+          last_name?: string
+          phone?: string | null
+          role?: Database["public"]["Enums"]["user_role"]
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      student_enrollment_dataset: {
+        Row: {
+          college_email: string
+          created_at: string | null
+          department: string
+          enrollment_number: string
+          first_name: string
+          id: string
+          is_used: boolean | null
+          last_name: string
+          semester: number
+        }
+        Insert: {
+          college_email: string
+          created_at?: string | null
+          department: string
+          enrollment_number: string
+          first_name: string
+          id?: string
+          is_used?: boolean | null
+          last_name: string
+          semester: number
+        }
+        Update: {
+          college_email?: string
+          created_at?: string | null
+          department?: string
+          enrollment_number?: string
+          first_name?: string
+          id?: string
+          is_used?: boolean | null
+          last_name?: string
+          semester?: number
+        }
+        Relationships: []
+      }
+      student_profiles: {
+        Row: {
+          created_at: string | null
+          department: string
+          enrollment_number: string
+          id: string
+          interests: string[] | null
+          portfolio_url: string | null
+          profile_id: string
+          resume_url: string | null
+          semester: number
+          skills: string[] | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          department: string
+          enrollment_number: string
+          id?: string
+          interests?: string[] | null
+          portfolio_url?: string | null
+          profile_id: string
+          resume_url?: string | null
+          semester: number
+          skills?: string[] | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          department?: string
+          enrollment_number?: string
+          id?: string
+          interests?: string[] | null
+          portfolio_url?: string | null
+          profile_id?: string
+          resume_url?: string | null
+          semester?: number
+          skills?: string[] | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_profiles_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +691,16 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      doubt_status: "open" | "assigned" | "in_progress" | "resolved"
+      doubt_urgency: "low" | "medium" | "high"
+      event_type:
+        | "networking"
+        | "workshop"
+        | "seminar"
+        | "career_fair"
+        | "meetup"
+      opportunity_type: "internship" | "job" | "volunteering"
+      user_role: "admin" | "alumni" | "student"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +827,18 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      doubt_status: ["open", "assigned", "in_progress", "resolved"],
+      doubt_urgency: ["low", "medium", "high"],
+      event_type: [
+        "networking",
+        "workshop",
+        "seminar",
+        "career_fair",
+        "meetup",
+      ],
+      opportunity_type: ["internship", "job", "volunteering"],
+      user_role: ["admin", "alumni", "student"],
+    },
   },
 } as const
