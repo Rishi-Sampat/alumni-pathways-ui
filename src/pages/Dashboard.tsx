@@ -176,12 +176,16 @@ const Dashboard = () => {
                           id: alumni.id,
                           name: ${alumni.profile?.first_name || ""} ${alumni.profile?.last_name || ""},
                           avatar: alumni.profile?.avatar_url || "",
+                          graduationYear: alumni.graduation_year || new Date().getFullYear(),
+                          department: alumni.department || "Alumni",
+                          currentCompany: alumni.current_company || "Not specified",
                           position: alumni.current_position || "Alumni",
-                          company: alumni.current_company || "",
-                          graduationYear: alumni.graduation_year,
-                          location: alumni.location || "",
-                          achievements: alumni.achievements || [],
-                          domains: alumni.domains || [],
+                          location: alumni.location || "Not specified",
+                          domain: alumni.domains || [],
+                          rating: 0,
+                          totalReviews: 0,
+                          resolvedDoubts: 0,
+                          isVerified: false,
                         }}
                       />
                     ))}
@@ -253,4 +257,4 @@ const Dashboard = () => {
   )
 }
 
-export default Dashboard
+export default Dashboard
