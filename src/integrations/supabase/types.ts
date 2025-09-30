@@ -688,7 +688,34 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      award_points: {
+        Args: {
+          action_name: string
+          domain_name?: string
+          points_amount: number
+          related_doubt_id?: string
+          related_event_id?: string
+          related_opportunity_id?: string
+          user_uuid: string
+        }
+        Returns: undefined
+      }
+      get_user_role: {
+        Args: { user_uuid: string }
+        Returns: Database["public"]["Enums"]["user_role"]
+      }
+      is_admin: {
+        Args: { user_uuid: string }
+        Returns: boolean
+      }
+      is_alumni: {
+        Args: { user_uuid: string }
+        Returns: boolean
+      }
+      is_student: {
+        Args: { user_uuid: string }
+        Returns: boolean
+      }
     }
     Enums: {
       doubt_status: "open" | "assigned" | "in_progress" | "resolved"
