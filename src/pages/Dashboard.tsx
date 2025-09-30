@@ -1,78 +1,79 @@
-import { useState, useEffect } from 'react';
-import { useAuth } from '@/hooks/useAuth';
-import { supabase } from '@/integrations/supabase/client';
-import { Navbar } from '@/components/Navbar';
-import { HeroCarousel } from '@/components/HeroCarousel';
-import { StatsStrip } from '@/components/StatsStrip';
-import { AlumniSpotlight } from '@/components/AlumniSpotlight';
-import { EventCard } from '@/components/EventCard';
-import { QuickActions } from '@/components/QuickActions';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Users, Briefcase, Calendar, MessageSquare, TrendingUp, Award } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import AlumniCard from '@/components/AlumniCard';
+"use client"
+
+import { useState, useEffect } from "react"
+import { useAuth } from "@/hooks/useAuth"
+import { supabase } from "@/integrations/supabase/client"
+import { Navbar } from "@/components/Navbar"
+import { HeroCarousel } from "@/components/HeroCarousel"
+import { StatsStrip } from "@/components/StatsStrip"
+import { EventCard } from "@/components/EventCard"
+import { QuickActions } from "@/components/QuickActions"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Users, Briefcase, Calendar, MessageSquare, Award } from "lucide-react"
+import { Link } from "react-router-dom"
+import { AlumniCard } from "@/components/AlumniCard"
 
 const Dashboard = () => {
-  const { user, profile } = useAuth();
+  const { user, profile } = useAuth()
   const [stats, setStats] = useState({
     totalUsers: 0,
     totalOpportunities: 0,
     totalEvents: 0,
     activeDoubts: 0,
-  });
-  const [recentEvents, setRecentEvents] = useState([]);
-  const [recentOpportunities, setRecentOpportunities] = useState([]);
-  const [featuredAlumni, setFeaturedAlumni] = useState([]);
-  const [leaderboard, setLeaderboard] = useState([]);
-  const [loading, setLoading] = useState(true);
+  })
+  const [recentEvents, setRecentEvents] = useState([])
+  const [recentOpportunities, setRecentOpportunities] = useState([])
+  const [featuredAlumni, setFeaturedAlumni] = useState([])
+  const [leaderboard, setLeaderboard] = useState([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetchDashboardData();
-  }, []);
+    fetchDashboardData()
+  }, [])
 
   const fetchDashboardData = async () => {
     try {
       // Fetch stats
       const [usersResult, opportunitiesResult, eventsResult, doubtsResult] = await Promise.all([
-        supabase.from('profiles').select('id', { count: 'exact', head: true }),
-        supabase.from('opportunities').select('id', { count: 'exact', head: true }).eq('is_active', true),
-        supabase.from('events').select('id', { count: 'exact', head: true }).eq('is_active', true),
-        supabase.from('doubts').select('id', { count: 'exact', head: true }).eq('status', 'open'),
-      ]);
+        supabase.from("profiles").select("id", { count: "exact", head: true }),
+        supabase.from("opportunities").select("id", { count: "exact", head: true }).eq("is_active", true),
+        supabase.from("events").select("id", { count: "exact", head: true }).eq("is_active", true),
+        supabase.from("doubts").select("id", { count: "exact", head: true }).eq("status", "open"),
+      ])
 
       setStats({
         totalUsers: usersResult.count || 0,
         totalOpportunities: opportunitiesResult.count || 0,
         totalEvents: eventsResult.count || 0,
         activeDoubts: doubtsResult.count || 0,
-      });
+      })
 
       // Fetch recent events
       const { data: events } = await supabase
-        .from('events')
-        .select('*')
-        .eq('is_active', true)
-        .gte('event_date', new Date().toISOString())
-        .order('event_date', { ascending: true })
-        .limit(3);
+        .from("events")
+        .select("*")
+        .eq("is_active", true)
+        .gte("event_date", new Date().toISOString())
+        .order("event_date", { ascending: true })
+        .limit(3)
 
-      setRecentEvents(events || []);
+      setRecentEvents(events || [])
 
       // Fetch recent opportunities
       const { data: opportunities } = await supabase
-        .from('opportunities')
-        .select('*')
-        .eq('is_active', true)
-        .order('created_at', { ascending: false })
-        .limit(3);
+        .from("opportunities")
+        .select("*")
+        .eq("is_active", true)
+        .order("created_at", { ascending: false })
+        .limit(3)
 
-      setRecentOpportunities(opportunities || []);
+      setRecentOpportunities(opportunities || [])
 
       // Fetch featured alumni
       const { data: alumni } = await supabase
-        .from('alumni_profiles')
+        .from("alumni_profiles")
         .select(`
           *,
           profile:profiles!alumni_profiles_profile_id_fkey(
@@ -82,44 +83,43 @@ const Dashboard = () => {
             email
           )
         `)
-        .order('created_at', { ascending: false })
-        .limit(3);
+        .order("created_at", { ascending: false })
+        .limit(3)
 
-      setFeaturedAlumni(alumni || []);
-
+      setFeaturedAlumni(alumni || [])
     } catch (error) {
-      console.error('Error fetching dashboard data:', error);
+      console.error("Error fetching dashboard data:", error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
       </div>
-    );
+    )
   }
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar 
-        isAuthenticated={!!user} 
-        userRole={profile?.role} 
-        userName={profile ? `${profile.first_name} ${profile.last_name}` : undefined}
+      <Navbar
+        isAuthenticated={!!user}
+        userRole={profile?.role}
+        userName={profile ? ${profile.first_name} ${profile.last_name} : undefined}
       />
-      
+
       <main className="container mx-auto px-4 py-8">
         <HeroCarousel />
-        
+
         <div className="mb-8">
-          <StatsStrip 
+          <StatsStrip
             stats={[
-              { label: 'Active Members', value: stats.totalUsers, icon: Users },
-              { label: 'Opportunities', value: stats.totalOpportunities, icon: Briefcase },
-              { label: 'Upcoming Events', value: stats.totalEvents, icon: Calendar },
-              { label: 'Open Questions', value: stats.activeDoubts, icon: MessageSquare },
+              { label: "Active Members", value: stats.totalUsers, icon: Users },
+              { label: "Opportunities", value: stats.totalOpportunities, icon: Briefcase },
+              { label: "Upcoming Events", value: stats.totalEvents, icon: Calendar },
+              { label: "Open Questions", value: stats.activeDoubts, icon: MessageSquare },
             ]}
           />
         </div>
@@ -170,16 +170,16 @@ const Dashboard = () => {
                 ) : (
                   <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                     {featuredAlumni.map((alumni) => (
-                      <AlumniCard 
-                        key={alumni.id} 
+                      <AlumniCard
+                        key={alumni.id}
                         alumni={{
                           id: alumni.id,
-                          name: `${alumni.profile?.first_name || ''} ${alumni.profile?.last_name || ''}`,
-                          avatar: alumni.profile?.avatar_url || '',
-                          position: alumni.current_position || 'Alumni',
-                          company: alumni.current_company || '',
+                          name: ${alumni.profile?.first_name || ""} ${alumni.profile?.last_name || ""},
+                          avatar: alumni.profile?.avatar_url || "",
+                          position: alumni.current_position || "Alumni",
+                          company: alumni.current_company || "",
                           graduationYear: alumni.graduation_year,
-                          location: alumni.location || '',
+                          location: alumni.location || "",
                           achievements: alumni.achievements || [],
                           domains: alumni.domains || [],
                         }}
@@ -250,7 +250,7 @@ const Dashboard = () => {
         </div>
       </main>
     </div>
-  );
-};
+  )
+}
 
-export default Dashboard;
+export default Dashboard
